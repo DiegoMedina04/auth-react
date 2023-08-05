@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import { useContext } from "react";
-import { context } from "../context/authContext";
+// import { context } from "../context/authContext";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -8,6 +8,7 @@ import {
   signOut,
   GoogleAuthProvider,
   signInWithPopup, //con que cuenta quiero hacer login
+  sendPasswordResetEmail
 } from "firebase/auth";
 import { auth } from "../firebase";
 
@@ -38,6 +39,8 @@ export function AuthProvider({ children }) {
     const googleProvider = new GoogleAuthProvider();
     return signInWithPopup(auth, googleProvider);
   };
+
+  const resetPassword = (email) => sendPasswordResetEmail(auth, email)
   useEffect(() => {
     onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
@@ -49,7 +52,7 @@ export function AuthProvider({ children }) {
     //4. todos lo elementos hijos podran accerder al objeto user
     //< authContext.Provider value={{ user }} >
     <authContext.Provider
-      value={{ signup, login, user, logout, loading, loginWithGoogle }}
+      value={{ signup, login, user, logout, loading, loginWithGoogle, resetPassword }}
     >
       {children}
     </authContext.Provider> //el auth provider nos permite utilizar el objeto en el cualquier componente
